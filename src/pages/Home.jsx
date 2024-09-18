@@ -23,6 +23,7 @@ const Home = () => {
                 >
                 </video>
                 <div className="absolute top-0 left-0 w-full h-full bg-slate-950 opacity-50"></div>
+
                 <div className="relative z-10 h-[calc(100vh-65.6px)]  flex items-center justify-center">
                     <div className="container mx-auto space-y-10 px-4 sm:px-6 lg:px-8 py-8">
                         {/* Heading Section */}
