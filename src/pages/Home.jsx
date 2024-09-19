@@ -8,6 +8,8 @@ import { budgets, preferences } from '../assets/constants';
 
 
 const Home = () => {
+    const MIN_DATE = new Date();
+    MIN_DATE.setDate(MIN_DATE.getDate());
     const [value, setValue] = useState({
         startDate: null,
         endDate: null
@@ -49,7 +51,7 @@ const Home = () => {
                                     <label htmlFor="date" className="block text-sm lg:text-lg  font-medium text-gray-700">
                                         Dates of Travel
                                     </label>
-                                    <Datepicker placeholder='Select dates' value={value} onChange={newValue => setValue(newValue)} popoverDirection='down' inputClassName={'mt-1 w-full h-14 pl-4 pr-10 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out sm:text-sm lg:text-xl  text-gray-700 placeholder-gray-400'} />
+                                    <Datepicker minDate={MIN_DATE} placeholder='Select dates' value={value} onChange={newValue => setValue(newValue)} popoverDirection='down' inputClassName={'mt-1 w-full h-14 pl-4 pr-10 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out sm:text-sm lg:text-xl  text-gray-700 placeholder-gray-400'} />
                                 </div>
 
                                 {/* Travel Preferences */}

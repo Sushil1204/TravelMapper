@@ -3,7 +3,8 @@ import mumbai from '../assets/mumbai.jpg';
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { commuteOptions, tips } from '../assets/constants';
 import SuggestionCard from '../components/SuggestionCard';
-
+import { MdSaveAlt } from "react-icons/md";
+import { CgRedo } from "react-icons/cg";
 const TripDetails = () => {
     const [showDetails, setShowDetails] = useState(true);
 
@@ -12,10 +13,10 @@ const TripDetails = () => {
     };
 
     return (
-        <div className="container mx-auto px-4 py-3">
+        <div className="container mx-auto px-4 py-3 my-5">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="lg:order-1 order-1 space-y-6">
-                    <div className="relative rounded-lg">
+                <div className="lg:order-1 order-1">
+                    <div className="relative rounded-lg mb-4">
                         <img
                             src={mumbai}
                             alt="Mumbai Adventure"
@@ -27,7 +28,20 @@ const TripDetails = () => {
                             </h1>
                         </div>
                     </div>
-
+                    <div className="flex items-center justify-end space-x-10">
+                        <div className="relative group">
+                            <CgRedo size={30} cursor={'pointer'} />
+                            <div className="absolute bottom-full mb-2 w-max left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                                Regenerate
+                            </div>
+                        </div>
+                        <div className="relative group">
+                            <MdSaveAlt size={25} cursor={'pointer'} />
+                            <div className="absolute bottom-full mb-2 w-max left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                                Save
+                            </div>
+                        </div>
+                    </div>
                     <div className="mt-6">
                         <div className="flex items-center justify-between">
                             <h2 className="text-lg md:text-xl font-semibold">Day 1: Exploring Mumbai</h2>
