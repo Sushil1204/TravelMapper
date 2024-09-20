@@ -1,4 +1,8 @@
-export const preferences = [
+export const preferencesOptions = [
+  {
+    name: "Select your preferences",
+    value: null,
+  },
   {
     name: "Adventure",
     value: "Adventure",
@@ -18,6 +22,10 @@ export const preferences = [
 ];
 
 export const budgets = [
+  {
+    name: "Select your budget",
+    value: null,
+  },
   {
     name: "Low Budget",
     value: "Low Budget",

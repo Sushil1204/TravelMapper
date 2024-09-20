@@ -4,7 +4,6 @@ import Home from "./pages/Home"
 import TripDetails from "./pages/TripDetails"
 import Profile from "./pages/Profile"
 
-
 function App() {
 
   return (
