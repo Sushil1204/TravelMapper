@@ -5,13 +5,13 @@ import { account } from '../utilities/appwriteConfig';
 
 const AccountVerificationModal = ({ isOpen, onClose }) => {
     if (!isOpen) return null;
-    const { data } = useQuery({
-        queryKey: ['Create Verify'],
-        queryFn: () => account.createVerification('http://localhost:5173/account-verification'),
-        refetchOnMount: false,
-        refetchOnWindowFocus: false,
-        refetchInterval: 2000
-    })
+    // const { data } = useQuery({
+    //     queryKey: ['Create Verify'],
+    //     queryFn: () => account.createVerification('http://localhost:5173/account-verification'),
+    //     refetchOnMount: false,
+    //     refetchOnWindowFocus: false,
+    //     refetchInterval: 2000
+    // })
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">

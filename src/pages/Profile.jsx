@@ -13,16 +13,18 @@ const Profile = () => {
         mutationFn: async () => await account.deleteSession(
             'current'
         ),
-        onSuccess: () => (
+        onSuccess: () => {
             navigate('/login')
-        )
+            Cookies.remove('userData')
+        }
+
     })
 
     const handleLogout = () => {
         Logout.mutate()
     }
 
-    const user = JSON.parse(Cookies.get('userData'))
+    const user = Cookies.get('userData') && JSON.parse(Cookies.get('userData'))
 
 
 

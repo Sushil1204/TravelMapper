@@ -12,6 +12,7 @@ import { fetchItinerary } from '../api';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { account } from '../utilities/appwriteConfig';
 import Cookies from 'js-cookie';
+import AccountVerificationModal from '../components/AccountVerificationModal';
 
 const Home = () => {
     const location = useLocation()
@@ -149,7 +150,6 @@ const Home = () => {
                     </div>
                 </div>
             </div>
-
         </>
 
     );
