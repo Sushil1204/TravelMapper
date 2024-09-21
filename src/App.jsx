@@ -4,6 +4,7 @@ import Home from "./pages/Home"
 import TripDetails from "./pages/TripDetails"
 import Profile from "./pages/Profile"
 import Login from "./pages/Login"
+import VerifyAccount from "./pages/VerifyAccount"
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
         <Route path="/trip-details" element={<TripDetails />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/account-verification" element={<VerifyAccount />} />
       </Routes>
     </div>
   )

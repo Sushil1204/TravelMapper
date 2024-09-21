@@ -7,13 +7,15 @@ import InputSelect from '../components/InputSelect';
 import { budgets, preferencesOptions } from '../assets/constants';
 import dayjs from 'dayjs';
 import { useGenerateItinerary } from '../hooks/useGenerateItinerary';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { fetchItinerary } from '../api';
-import { useNavigate } from 'react-router-dom';
-
+import { useLocation, useNavigate } from 'react-router-dom';
+import { account } from '../utilities/appwriteConfig';
+import Cookies from 'js-cookie';
 
 const Home = () => {
-    const navigate = useNavigate();
+    const location = useLocation()
+    const { state } = location;
     const [formData, setFormData] = useState({
         destination: '',
         duration: '',
@@ -76,8 +78,6 @@ const Home = () => {
         e.preventDefault();
         mutate()
     };
-
-    // console.log(data)
 
     return (
         <>

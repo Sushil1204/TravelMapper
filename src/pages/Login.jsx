@@ -2,35 +2,89 @@ import React, { useState } from 'react'
 import { BiShow, BiHide } from "react-icons/bi";
 import { useForm, Controller } from "react-hook-form"
 import { calculateStrength, getStrengthLevel } from '../utilities/passwordStrength';
+import { account, ID } from '../utilities/appwriteConfig';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const ErrorMessage = ({ message }) => {
     return <p className="text-red-500 text-sm mt-1">{message}</p>;
 };
 
 const Login = () => {
+    const navigate = useNavigate()
     const [togglePassword, setTogglePassword] = useState(false)
     const [view, setView] = useState('Register')
     const {
-        register,
         handleSubmit,
         control,
         watch,
         formState: { errors },
-    } = useForm()
+    } = useForm(
+        {
+            defaultValues: {
+                full_name: "",
+                email: "",
+                password: "",
+                term_condition: false
+            }
+        }
+    )
     const strength = calculateStrength(watch("password"));
     const strengthLevel = getStrengthLevel(strength);
 
-    const onSubmit = (data) => console.log(data)
+    const { mutate: signUpMutate, isSuccess: isSignupSuccess, data: signupData } = useMutation({
+        mutationKey: 'Signup',
+        mutationFn: async (data) => (await account.create(
+            ID.unique(),
+            data?.email,
+            data?.password,
+            data?.full_name,
+            data?.term_condition
+        )),
+        onSuccess: (signUpMutate, variables) => {
+            loginMutate(variables)
+        }
+
+    })
+
+    const { mutate: loginMutate, isSuccess: isLoginSuccess, data: loginData } = useMutation({
+        mutationFn: async (loginCred) => {
+            return await account.createEmailPasswordSession(loginCred?.email, loginCred?.password);
+        },
+        retryDelay: 2000
+    });
+    const onSignUp = (data) => (
+        signUpMutate(data)
+    )
+
+    const onLogin = (data) => {
+        loginMutate(data)
+    }
+    const { data: loggedInData, isSuccess: isLoggedInDataSuccess, isError: isLoggedInDataError } = useQuery({
+        queryKey: ['getLoggedInData', loginMutate],
+        queryFn: async () => await account.get(),
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        retryDelay: 2000,
+        enabled: isLoginSuccess
+    })
+    if (isLoggedInDataSuccess) {
+        Cookies.set('userData', JSON.stringify(loggedInData))
+        navigate('/')
+    }
+
+
     return (
         <div className='relative'>
             <div className='absolute inset-0 bg-gradient-to-r from-[#3494E6] to-[#EC6EAD] ' style={{
                 clipPath: 'polygon(0 0, 100% 0%, 100% 35%, 0 69%)'
             }}></div>
             <div className="relative z-10 md:container mx-auto w-full md:w-1/2 h-[calc(100vh-65.6px)] flex items-center justify-center px-4 md:px-0">
-                <div className="bg-slate-50 border border-black flex flex-col items-center p-5 md:p-10 space-y-4 w-full max-w-md">
-                    <h2 className='text-2xl font-bold'>Sign up to TravelMapper</h2>
+                <div className="bg-slate-50 border shadow-xl shadow-slate-500 flex flex-col items-center p-5 md:p-10 space-y-4 w-full max-w-md">
+                    <h2 className='text-2xl font-bold'>{view == 'Register' ? 'Sign up to TravelMapper' : 'Login to TravelMapper'}</h2>
                     <p className='text-center'>Join now and start creating personalized travel itineraries with ease</p>
-                    {view == 'Register' ? <form className='space-y-4 w-full' onSubmit={handleSubmit(onSubmit)}>
+                    {view == 'Register' ? <form className='space-y-4 w-full' onSubmit={handleSubmit(onSignUp)}>
                         <div className="">
                             <div className="w-full border border-gray-500 focus-within:border-2 focus-within:border-slate-950 space-y-1 py-2 px-4 transition duration-300">
                                 <p>FULL NAME <span className='text-red-500 text-xl'>*</span></p>
@@ -107,7 +161,7 @@ const Login = () => {
                                     :
                                     <BiShow size={25} onClick={() => setTogglePassword(!togglePassword)} cursor={'pointer'} color='gray' />}
                             </div>
-                            {strength > 0 &&
+                            {strength !== undefined && strength > 0 ?
                                 <>
                                     <div className="mt-2 w-full h-2 bg-gray-300 rounded-full">
                                         <div className={`h-2 rounded-full ${strengthLevel.color}`} style={{ width: `${(strength / 5) * 100}%` }}></div>
@@ -116,6 +170,7 @@ const Login = () => {
                                         {strengthLevel.label}
                                     </p>
                                 </>
+                                : <></>
                             }
                         </div>
 
@@ -137,7 +192,7 @@ const Login = () => {
                         <button type='submit' className='w-full bg-black text-white py-3 md:py-4'>CREATE AN ACCOUNT</button>
                     </form>
                         :
-                        <form className='space-y-4 w-full'>
+                        <form className='space-y-4 w-full' onSubmit={handleSubmit(onLogin)}>
                             <div className="">
                                 <div className="w-full border border-gray-500 focus-within:border-black space-y-1 py-2 px-4 transition duration-300">
                                     <p>EMAIL ADDRESS</p>
@@ -191,13 +246,9 @@ const Login = () => {
                                         :
                                         <BiShow size={25} onClick={() => setTogglePassword(!togglePassword)} cursor={'pointer'} color='gray' />}
                                 </div>
+                                <p className='text-sm font-semibold text-black mt-1 cursor-pointer'>Forget password</p>
                             </div>
-
-                            <div className="flex items-center gap-2">
-                                <input type="checkbox" className='w-5 h-5 md:w-8 md:h-8' />
-                                <p className='text-sm font-semibold text-slate-600'>I agree to the Terms of Service and Privacy Policy.</p>
-                            </div>
-                            <button className='w-full bg-black text-white py-3 md:py-4 uppercase'>Log in</button>
+                            <button type='submit' className='w-full bg-black text-white py-3 md:py-4 uppercase'>Log in</button>
                         </form>
                     }
                     <p className='flex ml-auto cursor-pointer' onClick={() => setView(view == 'Register' ? "login" : "Register")}>{view == 'login' ? 'New User? Sign up' : 'Already registered? Sign in'}</p>

@@ -1,5 +1,4 @@
 export const calculateStrength = (password) => {
-  console.log(password);
   let strength = 0;
 
   if (password?.length >= 6) strength += 1; // Minimum length
