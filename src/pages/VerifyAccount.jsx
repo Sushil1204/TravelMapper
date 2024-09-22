@@ -1,6 +1,40 @@
-import React from 'react'
+import { useMutation, useQuery } from '@tanstack/react-query';
+import React, { useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { account } from '../utilities/appwriteConfig';
+import Cookies from 'js-cookie';
 
 const VerifyAccount = () => {
+    const { search } = useLocation()
+    const navigate = useNavigate()
+    const searchParams = new URLSearchParams(search);
+    const secret = searchParams.get('secret');
+    const userId = searchParams.get('userId');
+    console.log(secret, userId)
+
+    const { mutate: accountVerificationMutate, isSuccess: isAccountVerificationSuccess } = useMutation({
+        mutationKey: ['accountVerification'],
+        mutationFn: async () => await account.updateVerification(userId, secret)
+    })
+
+    useEffect(() => {
+        accountVerificationMutate()
+    }, [])
+
+    const { data: loggedInData, isSuccess: isLoggedInDataSuccess, isError: isLoggedInDataError, } = useQuery({
+        queryKey: ['getLoggedInData'],
+        queryFn: async () => await account.get(),
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        retryDelay: 2000,
+        // enabled: 
+    })
+    if (isLoggedInDataSuccess) {
+        Cookies.set('userData', JSON.stringify(loggedInData))
+        navigate('/')
+    }
+
+
     return (
         <div className='relative'>
             <div className='absolute inset-0 bg-gradient-to-r from-[#3494E6] to-[#EC6EAD] ' style={{

@@ -13,12 +13,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { account } from '../utilities/appwriteConfig';
 import Cookies from 'js-cookie';
 import AccountVerificationModal from '../components/AccountVerificationModal';
-
+import AuthLoader from '../assets/authLoader.gif'
 const Home = () => {
     const location = useLocation()
     const { state } = location;
     const [formData, setFormData] = useState({
-        destination: '',
+        Destination: '',
         duration: '',
         dateOfTravel: {},
         preferences: '',
@@ -92,7 +92,7 @@ const Home = () => {
                 </video>
                 <div className="absolute top-0 left-0 w-full h-full bg-slate-950 opacity-50"></div>
 
-                <div className="relative z-10 h-[calc(100vh-65.6px)]  flex items-center justify-center">
+                <div className="relative z-10 md:h-[calc(100vh-65.6px)]  flex items-center justify-center">
                     <div className="container mx-auto space-y-10 px-4 sm:px-6 lg:px-8 py-8">
                         {/* Heading Section */}
                         <div className="text-center">
@@ -107,41 +107,37 @@ const Home = () => {
                         {/* Form Section */}
                         <div className="max-w-full mx-auto bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
                             <form onSubmit={handleSubmit}>
-                                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 place-items-center">
-                                    {/* Destination */}
+                                <div className="grid sm:grid-cols-1 lg:grid-cols-4 gap-6 place-items-center">
                                     <div className="mb-4 w-full">
-                                        <InputBox value={formData.destination} handleChange={handleChange} name={'destination'} placeholder={'Enter a city or country'} />
+                                        <InputBox value={formData.destination} handleChange={handleChange} name={'Destination'} placeholder={'Enter a city or country'} />
                                     </div>
 
                                     {/* Dates of Travel */}
                                     <div className="mb-4 w-full">
-                                        <label htmlFor="date" className="block text-sm lg:text-lg  font-medium text-gray-700">
+                                        <label htmlFor="date" className="block text-sm font-medium text-gray-700">
                                             Dates of Travel
                                         </label>
                                         <Datepicker name={'dateOfTravel'} minDate={MIN_DATE} placeholder='Select dates' value={dateRange}
-                                            onChange={newValue => setDateRange(newValue)} popoverDirection='down' inputClassName={'mt-1 w-full h-14 pl-4 pr-10 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out sm:text-sm lg:text-xl  text-gray-700 placeholder-gray-400'} />
+                                            onChange={newValue => setDateRange(newValue)} popoverDirection='down' inputClassName={'mt-1 w-full h-14 pl-4 pr-10 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out text-sm placeholder-gray-400'} />
                                     </div>
 
                                     {/* Travel Preferences */}
                                     <div className="mb-4 w-full">
                                         <InputSelect value={formData.preferences} handleChange={handleChange} label={'Travel Preferences'} name={'preferences'} placeholder={'Travel Preferences'} options={preferencesOptions} />
-
                                     </div>
 
                                     {/* Budget Constraints */}
                                     <div className="mb-4 w-full">
                                         <InputSelect value={formData.budget} handleChange={handleChange} label={'Budget Constraints'} name={'budget'} placeholder={'Budget Constraints'} options={budgets} />
-
                                     </div>
 
                                     {/* Submit Button */}
-                                    <div className="col-span-1 sm:col-span-2 lg:col-span-4">
+                                    <div className="col-span-1 sm:col-span-1 lg:col-span-4">
                                         <button
                                             type="submit"
-                                            className="flex items-center gap-5 w-full h-14 bg-blue-600 text-white text-xl py-2 px-4 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                            className="flex items-center justify-center h-14 bg-blue-600 text-white text-xl py-2 px-4 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                                         >
-                                            <WiStars size={30} />
-                                            {isPending ? 'Generating Itinerary' : 'Generate Itinerary'}
+                                            {isPending ? <div className='flex items-center space-x-2'> <img src={AuthLoader} className='w-10' /> <p className='text-sm md:text-xl'>Generating Itinerary</p></div> : <p className='text-sm md:text-xl'>Generate Itinerary</p>}
                                         </button>
                                     </div>
                                 </div>

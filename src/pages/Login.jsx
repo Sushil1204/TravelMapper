@@ -76,6 +76,13 @@ const Login = () => {
         navigate('/')
     }
     useEffect(() => {
+        if (Cookies.get('userData')) {
+            navigate('/')
+        }
+    }, [])
+
+
+    useEffect(() => {
         let timer;
 
         if (isLoginError) {

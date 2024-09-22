@@ -11,9 +11,10 @@ import Cookies from "js-cookie"
 
 function App() {
   const location = useLocation()
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState();
   const user = Cookies.get('userData') && JSON.parse(Cookies.get('userData'))
 
+  console.log(user?.emailVerification)
   useEffect(() => {
     if (!user?.emailVerification) {
       setIsModalOpen(true)
@@ -31,7 +32,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/account-verification" element={<VerifyAccount />} />
       </Routes>
-      {location.pathname != '/login' && < AccountVerificationModal
+      {location.pathname != '/login' && location.pathname != '/account-verification' && < AccountVerificationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />}
