@@ -8,22 +8,36 @@ import VerifyAccount from "./pages/VerifyAccount"
 import { useEffect, useState } from "react"
 import AccountVerificationModal from "./components/AccountVerificationModal"
 import Cookies from "js-cookie"
+import { useMutation } from "@tanstack/react-query"
 
 function App() {
   const location = useLocation()
   const [isModalOpen, setIsModalOpen] = useState();
   const user = Cookies.get('userData') && JSON.parse(Cookies.get('userData'))
 
-  console.log(user?.emailVerification)
-  useEffect(() => {
-    if (!user?.emailVerification) {
-      setIsModalOpen(true)
+
+  const Logout = useMutation({
+    mutationKey: ['Logout'],
+    mutationFn: async () => await account.deleteSession(
+      'current'
+    ),
+    onSuccess: () => {
+      navigate('/login')
     }
+  })
+
+  useEffect(() => {
+    location.pathname != 'login' && user == undefined &&
+      Logout.mutate()
+
+    user != undefined && !user?.emailVerification &&
+      setIsModalOpen(true)
+
   }, [])
 
 
   return (
-    <div className="h-screen">
+    <div className="min-h-screen h-full  dark:bg-gray-900 dark:text-white">
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />

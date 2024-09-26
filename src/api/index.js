@@ -27,21 +27,25 @@ export const fetchItinerary = async (params) => {
 
 1. **City/Country Name(s)**: ${destination}
 2. **Duration of Stay**: ${duration}
-3. **Date of Travel**: from ${dateRange[0]} to ${dateRange[1]} (ps: it will be date range)
+3. **Date of Travel**: from ${dateRange[0]} to ${
+          dateRange[1]
+        } (ps: it will be date range)
 4. **Travel Preferences**: ${preferences} (e.g., adventure, relaxation, family, solo)
 5. **Budget Constraints**: ${budget} (e.g., low-budget, mid-range, luxury)
 
 Your response should include the following sections:
 
 1. **Destination_Overview**:
-   - Name: combination of ${destination}, ${duration}, ${preferences} and ${budget}.
+   - Name: combination of ${destination
+     .split(/[,|-]/)[0]
+     .trim()}, ${duration}, ${preferences} and ${budget}. 
    - Description: A brief description of the ${destination}.
 
 2. **Itinerary**:
    - **Day 1**:
-     - Activities: List of activities with descriptions and time to visit using 12 hours system also include the activities which will be happening between date of travel.
+     - Activities: List of activities with descriptions and time using 12 hours system also include the activities which will be happening between date of travel.
    - **Day 2**:
-     - Activities: List of activities with descriptions and time to visit from moring to night also include the activities which will be happening between date of travel.
+     - Activities: List of activities with descriptions and time from moring to night also include the activities which will be happening between date of travel.
    - (Continue for the ${duration} of the stay)
 
 3. **Nearby_Attractions**:

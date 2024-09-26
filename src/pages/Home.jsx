@@ -6,7 +6,7 @@ import homebg from '../assets/homebg.mp4'
 import InputSelect from '../components/InputSelect';
 import { budgets, preferencesOptions } from '../assets/constants';
 import dayjs from 'dayjs';
-import { useGenerateItinerary } from '../hooks/useGenerateItinerary';
+import useDebounceHook from '../hooks/useDebounceHook';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { fetchItinerary } from '../api';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -14,17 +14,19 @@ import { account } from '../utilities/appwriteConfig';
 import Cookies from 'js-cookie';
 import AccountVerificationModal from '../components/AccountVerificationModal';
 import AuthLoader from '../assets/authLoader.gif'
+import axios from 'axios';
 const Home = () => {
     const location = useLocation()
+    const navigate = useNavigate()
     const { state } = location;
     const [formData, setFormData] = useState({
-        Destination: '',
+        destination: '',
         duration: '',
         dateOfTravel: {},
         preferences: '',
         budget: '',
     });
-    const [tripDetails, setTripDetails] = useState({})
+    const [showSuggestions, setShowSuggestions] = useState(true); // New state to control suggestion visibility
 
     const MIN_DATE = new Date();
     MIN_DATE.setDate(MIN_DATE.getDate());
@@ -33,8 +35,6 @@ const Home = () => {
         startDate: null,
         endDate: null
     });
-
-
 
     // Update formData when dateRange changes
     useEffect(() => {
@@ -69,16 +69,30 @@ const Home = () => {
     };
     const { destination, dateOfTravel, duration, preferences, budget } = formData;
 
-    const { mutate, data, error, isPending, isSuccess, isError } = useMutation({
+    const { mutate, isPending, isSuccess, isError } = useMutation({
         mutationFn: () => fetchItinerary({ destination, dateOfTravel, duration, preferences, budget }),
-        onSuccess: (data) => (
-            navigate('/trip-details', { state: data })
-        )
+        onSuccess: (data) => {
+            navigate('/trip-details', { state: { tripDetails: data } })
+        }
     })
     const handleSubmit = async (e) => {
         e.preventDefault();
         mutate()
     };
+
+    const debouncedSearchTerm = useDebounceHook(destination, 2000) // custom hook for debouncing
+
+    const { data: placesData, isSuccess: isPlacesDataSuccess } = useQuery({
+        queryKey: ['fetchPlaces'],
+        queryFn: async () => await axios.get(`https://api.geoapify.com/v1/geocode/autocomplete?apiKey=${import.meta.env.VITE_GEOAPIFY_API_KEY}&format=json&text=${debouncedSearchTerm}&type=city`),
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        // retryDelay: 2000
+        retry: false,
+        enabled: !!debouncedSearchTerm
+    })
+
+    const places = placesData?.data?.results.filter((place) => place?.rank?.confidence > 0)
 
     return (
         <>
@@ -106,10 +120,28 @@ const Home = () => {
 
                         {/* Form Section */}
                         <div className="max-w-full mx-auto bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
-                            <form onSubmit={handleSubmit}>
+                            <form onSubmit={(e) => handleSubmit(e)}>
                                 <div className="grid sm:grid-cols-1 lg:grid-cols-4 gap-6 place-items-center">
-                                    <div className="mb-4 w-full">
-                                        <InputBox value={formData.destination} handleChange={handleChange} name={'Destination'} placeholder={'Enter a city or country'} />
+                                    <div className="mb-4 w-full relative">
+                                        <InputBox value={formData.destination} handleChange={handleChange} name={'destination'} placeholder={'Enter a city or country'} />
+                                        {showSuggestions && places && places.length > 0 && (
+                                            <ul className="autocomplete-list absolute z-10 mt-2 bg-white border dark:bg-gray-800 dark:border-none border-gray-300 rounded shadow-lg">
+                                                {places.map((place, index) => (
+                                                    <li
+                                                        key={index}
+                                                        className="px-4 py-2 hover:bg-gray-200 hover:dark:bg-black dark:text-white cursor-pointer"
+                                                        onClick={() => {
+                                                            setFormData((prev) => ({ ...prev, destination: place?.formatted }))
+                                                            // Reset destination to stop fetching and hide suggestions
+                                                            setShowSuggestions(false); // Hide suggestions after selection
+
+                                                        }}
+                                                    >
+                                                        {place?.formatted}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
                                     </div>
 
                                     {/* Dates of Travel */}
@@ -135,6 +167,7 @@ const Home = () => {
                                     <div className="col-span-1 sm:col-span-1 lg:col-span-4">
                                         <button
                                             type="submit"
+
                                             className="flex items-center justify-center h-14 bg-blue-600 text-white text-xl py-2 px-4 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                                         >
                                             {isPending ? <div className='flex items-center space-x-2'> <img src={AuthLoader} className='w-10' /> <p className='text-sm md:text-xl'>Generating Itinerary</p></div> : <p className='text-sm md:text-xl'>Generate Itinerary</p>}

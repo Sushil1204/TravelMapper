@@ -5,7 +5,7 @@ import { Link, useLocation } from 'react-router-dom'
 const Navbar = () => {
     const location = useLocation();
     return (
-        <header className="w-full border-b-2 border-slate-300 bg-white shadow-md">
+        <header className="w-full border-b-2 border-slate-300 bg-white shadow-md dark:bg-gray-800 dark:text-white">
             <div className="container mx-auto px-4 py-3 flex items-center justify-between">
                 {/* Logo Section */}
                 <Link to={'/'}>
