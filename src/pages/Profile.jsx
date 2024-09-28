@@ -17,14 +17,14 @@ const Profile = () => {
             'current'
         ),
         onSuccess: () => {
-            navigate('/login')
-            Cookies.remove('userData')
+            Cookies.remove('userData', { path: '/' })
         }
 
     })
 
     const handleLogout = () => {
         Logout.mutate()
+        navigate('/')
     }
 
     const user = Cookies.get('userData') && JSON.parse(Cookies.get('userData'))
@@ -49,7 +49,7 @@ const Profile = () => {
         <div class="container mx-auto my-10 px-4">
             <div class=" flex sm:flex-col md:flex-row sm:space-y-10 items-center justify-evenly">
                 <div class="flex items-center sm:flex-col md:flex-row sm:space-y-4 space-x-10">
-                    <img class="inline-block h-24 w-2h-24 rounded-full ring-2 ring-white" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+                    <img class="inline-block h-24 w-2h-24 rounded-full ring-2 ring-white" src={`https://ui-avatars.com/api/?name=${user?.name}`} alt="" />
                     <div>
                         <h2 class="text-2xl font-bold">{user?.name}</h2>
                         <p class="text-gray-500">{user?.email}</p>

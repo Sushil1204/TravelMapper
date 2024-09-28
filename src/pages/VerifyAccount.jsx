@@ -29,6 +29,7 @@ const VerifyAccount = () => {
         retryDelay: 2000,
         // enabled: 
     })
+    console.log('isLoggedInDataSuccess')
     if (isLoggedInDataSuccess) {
         Cookies.set('userData', JSON.stringify(loggedInData))
         navigate('/')

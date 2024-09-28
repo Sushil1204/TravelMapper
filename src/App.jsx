@@ -9,6 +9,7 @@ import { useEffect, useState } from "react"
 import AccountVerificationModal from "./components/AccountVerificationModal"
 import Cookies from "js-cookie"
 import { useMutation } from "@tanstack/react-query"
+import { Toaster } from "react-hot-toast"
 
 function App() {
   const location = useLocation()
@@ -32,25 +33,30 @@ function App() {
 
     user != undefined && !user?.emailVerification &&
       setIsModalOpen(true)
-
   }, [])
 
 
+
+
   return (
-    <div className="min-h-screen h-full  dark:bg-gray-900 dark:text-white">
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/trip-details" element={<TripDetails />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/account-verification" element={<VerifyAccount />} />
-      </Routes>
-      {location.pathname != '/login' && location.pathname != '/account-verification' && < AccountVerificationModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />}
-    </div>
+    <>
+
+      <Toaster />
+      <div className="min-h-screen h-full  dark:bg-gray-900 dark:text-white">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/trip-details" element={<TripDetails />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/account-verification" element={<VerifyAccount />} />
+        </Routes>
+        {location.pathname != '/login' && location.pathname != '/account-verification' && < AccountVerificationModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />}
+      </div>
+    </>
   )
 }
 

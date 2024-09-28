@@ -71,15 +71,12 @@ const Login = () => {
         retryDelay: 2000,
         enabled: isLoginSuccess
     })
+    console.log(isLoggedInDataSuccess)
+
     if (isLoggedInDataSuccess) {
         Cookies.set('userData', JSON.stringify(loggedInData))
         navigate('/')
     }
-    useEffect(() => {
-        if (Cookies.get('userData')) {
-            navigate('/')
-        }
-    }, [])
 
 
     useEffect(() => {
@@ -106,12 +103,12 @@ const Login = () => {
                 {isLoginError && <AuthErrors error={loginError?.message} />}
                 {isSignupError && <AuthErrors error={signupError?.message} />}
                 <div className="bg-slate-50 border shadow-xl shadow-slate-500 flex flex-col items-center p-5 md:p-10 space-y-4 w-full max-w-md">
-                    <h2 className='text-2xl font-bold'>{view == 'Register' ? 'Sign up to TravelMapper' : 'Login to TravelMapper'}</h2>
-                    <p className='text-center'>Join now and start creating personalized travel itineraries with ease</p>
+                    <h2 className='text-2xl font-bold dark:text-gray-800'>{view == 'Register' ? 'Sign up to TravelMapper' : 'Login to TravelMapper'}</h2>
+                    <p className='text-center dark:text-gray-800'>Join now and start creating personalized travel itineraries with ease</p>
                     {view == 'Register' ? <form className='space-y-4 w-full' onSubmit={handleSubmit(onSignUp)}>
                         <div className="">
                             <div className="w-full border border-gray-500 focus-within:border-2 focus-within:border-slate-950 space-y-1 py-2 px-4 transition duration-300">
-                                <p>FULL NAME <span className='text-red-500 text-xl'>*</span></p>
+                                <p className='text-white dark:text-gray-800'>FULL NAME <span className='text-red-500 text-xl'>*</span></p>
                                 <Controller
                                     name="full_name"
                                     control={control}
@@ -134,7 +131,7 @@ const Login = () => {
                                 {errors.full_name && <ErrorMessage message={errors.full_name.message} />}
                             </div>
                             <div className="w-full border-l border-r border-b border-gray-500 focus-within:border-2 focus-within:border-slate-950 space-y-1 py-2 px-4 transition duration-300">
-                                <p>EMAIL ADDRESS <span className='text-red-500 text-xl'>*</span></p>
+                                <p className='text-white dark:text-gray-800'>EMAIL ADDRESS <span className='text-red-500 text-xl'>*</span></p>
                                 <Controller
                                     name="email"
                                     control={control}
@@ -158,7 +155,7 @@ const Login = () => {
                             </div>
                             <div className="w-full border-l border-r border-b border-gray-500 focus-within:border-2 focus-within:border-slate-950 transition duration-300 space-y-1 py-2 px-4 flex items-center justify-between">
                                 <div>
-                                    <p>PASSWORD <span className='text-red-500 text-xl'>*</span></p>
+                                    <p className='text-white dark:text-gray-800'>PASSWORD <span className='text-red-500 text-xl'>*</span></p>
                                     <Controller
                                         name="password"
                                         control={control}
@@ -223,7 +220,7 @@ const Login = () => {
                             <form className='space-y-4 w-full' onSubmit={handleSubmit(onLogin)}>
                                 <div className="">
                                     <div className="w-full border border-gray-500 focus-within:border-black space-y-1 py-2 px-4 transition duration-300">
-                                        <p>EMAIL ADDRESS</p>
+                                        <p className='text-white dark:text-gray-800'>EMAIL ADDRESS</p>
                                         <Controller
                                             name="email"
                                             control={control}
@@ -247,7 +244,7 @@ const Login = () => {
                                     </div>
                                     <div className="w-full border-x border-b border-gray-500 focus-within:border-black transition duration-300 space-y-1 py-2 px-4 flex items-center justify-between">
                                         <div>
-                                            <p>PASSWORD</p>
+                                            <p className='text-white dark:text-gray-800'>PASSWORD</p>
                                             <Controller
                                                 name="password"
                                                 control={control}
@@ -264,7 +261,7 @@ const Login = () => {
                                                 }}
                                                 render={({ field }) => (
                                                     <input type={togglePassword ? "text" : "password"} placeholder='****'
-                                                        className='w-full active:outline-none focus:outline-none' {...field} />
+                                                        className='w-full active:outline-none focus:outline-none text-black' {...field} />
                                                 )}
                                             />
                                             {errors.password && <ErrorMessage message={errors.password.message} />}
@@ -274,7 +271,7 @@ const Login = () => {
                                             :
                                             <BiShow size={25} onClick={() => setTogglePassword(!togglePassword)} cursor={'pointer'} color='gray' />}
                                     </div>
-                                    <p className='text-sm font-semibold text-black mt-1 cursor-pointer'>Forget password</p>
+                                    <p className='text-sm font-semibold text-black mt-1  dark:text-gray-800 cursor-pointer'>Forget password</p>
                                 </div>
                                 <button type='submit' className='w-full bg-black text-white py-3 md:py-4 uppercase flex items-center justify-center gap-2'>
                                     {loginPending && <img src={AuthLoader} alt="" className='w-10' />}
@@ -284,7 +281,7 @@ const Login = () => {
                             </form>
                         </>
                     }
-                    <p className='flex ml-auto cursor-pointer' onClick={() => setView(view == 'Register' ? "login" : "Register")}>{view == 'login' ? 'New User? Sign up' : 'Already registered? Sign in'}</p>
+                    <p className='flex ml-auto cursor-pointer text-white dark:text-gray-800' onClick={() => setView(view == 'Register' ? "login" : "Register")}>{view == 'login' ? 'New User? Sign up' : 'Already registered? Sign in'}</p>
                 </div>
             </div>
         </div>

@@ -20,7 +20,7 @@ const Home = () => {
     const navigate = useNavigate()
     const { state } = location;
     const [formData, setFormData] = useState({
-        destination: '',
+        Destination: '',
         duration: '',
         dateOfTravel: {},
         preferences: '',
@@ -67,10 +67,10 @@ const Home = () => {
             }));
         }
     };
-    const { destination, dateOfTravel, duration, preferences, budget } = formData;
+    const { Destination, dateOfTravel, duration, preferences, budget } = formData;
 
     const { mutate, isPending, isSuccess, isError } = useMutation({
-        mutationFn: () => fetchItinerary({ destination, dateOfTravel, duration, preferences, budget }),
+        mutationFn: () => fetchItinerary({ Destination, dateOfTravel, duration, preferences, budget }),
         onSuccess: (data) => {
             navigate('/trip-details', { state: { tripDetails: data } })
         }
@@ -80,7 +80,7 @@ const Home = () => {
         mutate()
     };
 
-    const debouncedSearchTerm = useDebounceHook(destination, 2000) // custom hook for debouncing
+    const debouncedSearchTerm = useDebounceHook(Destination, 2000) // custom hook for debouncing
 
     const { data: placesData, isSuccess: isPlacesDataSuccess } = useQuery({
         queryKey: ['fetchPlaces'],
@@ -123,25 +123,27 @@ const Home = () => {
                             <form onSubmit={(e) => handleSubmit(e)}>
                                 <div className="grid sm:grid-cols-1 lg:grid-cols-4 gap-6 place-items-center">
                                     <div className="mb-4 w-full relative">
-                                        <InputBox value={formData.destination} handleChange={handleChange} name={'destination'} placeholder={'Enter a city or country'} />
-                                        {showSuggestions && places && places.length > 0 && (
-                                            <ul className="autocomplete-list absolute z-10 mt-2 bg-white border dark:bg-gray-800 dark:border-none border-gray-300 rounded shadow-lg">
-                                                {places.map((place, index) => (
-                                                    <li
-                                                        key={index}
-                                                        className="px-4 py-2 hover:bg-gray-200 hover:dark:bg-black dark:text-white cursor-pointer"
-                                                        onClick={() => {
-                                                            setFormData((prev) => ({ ...prev, destination: place?.formatted }))
-                                                            // Reset destination to stop fetching and hide suggestions
-                                                            setShowSuggestions(false); // Hide suggestions after selection
+                                        <div>
+                                            <InputBox value={formData.Destination} handleChange={handleChange} name={'Destination'} placeholder={'Enter a city or country'} />
+                                            {showSuggestions && places && places.length > 0 && (
+                                                <ul className="autocomplete-list absolute z-10 mt-2 bg-white border dark:bg-gray-800 dark:border-none border-gray-300 rounded shadow-lg">
+                                                    {places.map((place, index) => (
+                                                        <li
+                                                            key={index}
+                                                            className="px-4 py-2 hover:bg-gray-200 hover:dark:bg-black dark:text-white cursor-pointer"
+                                                            onClick={() => {
+                                                                setFormData((prev) => ({ ...prev, destination: place?.formatted }))
+                                                                // Reset destination to stop fetching and hide suggestions
+                                                                setShowSuggestions(false); // Hide suggestions after selection
 
-                                                        }}
-                                                    >
-                                                        {place?.formatted}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        )}
+                                                            }}
+                                                        >
+                                                            {place?.formatted}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                        </div>
                                     </div>
 
                                     {/* Dates of Travel */}
