@@ -3,13 +3,15 @@ import { MdLogout, MdDelete, MdLightMode, MdDarkMode } from "react-icons/md";
 import mumbai from '../assets/mumbai.jpg'
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { account, databases } from '../utilities/appwriteConfig';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { Query } from 'appwrite';
 import { useTheme } from '../theme/ThemeProvider';
 
 const Profile = () => {
     const navigate = useNavigate()
+    const location = useLocation();
+    const { state } = location;
     const { theme, toggleTheme } = useTheme();
     const Logout = useMutation({
         mutationKey: ['Logout'],
@@ -29,7 +31,7 @@ const Profile = () => {
 
     const user = Cookies.get('userData') && JSON.parse(Cookies.get('userData'))
 
-    const { data: fetchSavedTrip, isSuccess: isFetchSavedTripsSuccess, isError: isFetchSavedError } = useQuery({
+    const { data: fetchSavedTrip, isSuccess: isFetchSavedTripsSuccess, isError: isFetchSavedError, refetch: refetchSavedTrips } = useQuery({
         queryKey: ['TripDetails'],
         queryFn: async () => await databases.listDocuments(
             import.meta.env.VITE_DATABASE_ID,
@@ -43,10 +45,12 @@ const Profile = () => {
         retryDelay: 2000
     })
 
+    if (state?.refetchDoucuments) refetchSavedTrips()
+
 
 
     return (
-        <div class="container mx-auto my-10 px-4">
+        <div class="container  h-screen md:h-full mx-auto mt-10 px-4">
             <div class=" flex sm:flex-col md:flex-row sm:space-y-10 items-center justify-evenly">
                 <div class="flex items-center sm:flex-col md:flex-row sm:space-y-4 space-x-10">
                     <img class="inline-block h-24 w-2h-24 rounded-full ring-2 ring-white" src={`https://ui-avatars.com/api/?name=${user?.name}`} alt="" />
@@ -90,7 +94,7 @@ const Profile = () => {
             <div className="mt-10">
                 <h3 className="text-2xl font-semibold mb-4">Your Saved Travel Itineraries</h3>
 
-                {fetchSavedTrip?.documents.length > 0 ? <div className="grid sm:grid-cols-1 lg:grid-cols-3 gap-6">
+                {fetchSavedTrip?.documents.length > 0 ? <div className="grid sm:grid-cols-1 lg:grid-cols-3 gap-6 py-10">
                     {fetchSavedTrip?.documents?.map((savedTrip, index) => {
                         return <div div key={index} className="relative rounded-lg" onClick={() => navigate('/trip-details', {
                             state: {
@@ -111,9 +115,9 @@ const Profile = () => {
                         </div>
 
                     })}
-                </div> : <div className="grid sm:grid-cols-1 lg:grid-cols-3 gap-6">
-                    <p className='col-span-3 text-lg font-semibold'>No data</p>
-                </div>}
+                </div> :
+                    <p className='col-span-3 text-lg font-semibold w-full h-full flex items-center justify-center'>No Itineraries created</p>
+                }
             </div>
         </div >
 

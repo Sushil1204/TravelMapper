@@ -1,17 +1,19 @@
 import React from 'react'
 import nav_logo from '../assets/nav_logo.svg'
 import logo_white from '../assets/logo_white.svg'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useTheme } from '../theme/ThemeProvider';
 import Cookies from 'js-cookie';
 import toast from 'react-hot-toast';
 import crossIcon from '../assets/crossIcon.png'
 import { IoClose } from 'react-icons/io5';
+import useAuth from '../hooks/useAuth';
 
 const Navbar = () => {
     const location = useLocation();
+    const navigate = useNavigate()
     const { theme } = useTheme();
-    const isAuthenticated = Cookies.get('userData') && JSON.parse(Cookies.get('userData'));
+    const { isAuthenticated } = useAuth();
     const handleProfileClick = (e) => {
         if (!isAuthenticated) {
             e.preventDefault(); // Prevent navigation
@@ -22,6 +24,12 @@ const Navbar = () => {
                     color: '#fff',
                 },
             })
+
+            setTimeout(() => {
+                navigate('/login')
+
+                clearTimeout()
+            }, 5000);
         }
     };
 

@@ -15,12 +15,13 @@ import Cookies from 'js-cookie';
 import AccountVerificationModal from '../components/AccountVerificationModal';
 import AuthLoader from '../assets/authLoader.gif'
 import axios from 'axios';
+import toast from 'react-hot-toast';
 const Home = () => {
     const location = useLocation()
     const navigate = useNavigate()
     const { state } = location;
     const [formData, setFormData] = useState({
-        Destination: '',
+        destination: '',
         duration: '',
         dateOfTravel: {},
         preferences: '',
@@ -35,7 +36,6 @@ const Home = () => {
         startDate: null,
         endDate: null
     });
-
     // Update formData when dateRange changes
     useEffect(() => {
         const { startDate, endDate } = dateRange;
@@ -44,7 +44,7 @@ const Home = () => {
         if (startDate && endDate) {
             const start = dayjs(startDate);
             const end = dayjs(endDate);
-            const diffDays = end.diff(start, 'day');
+            const diffDays = end.diff(start, 'day') + 1;
             duration = `${diffDays} days`;
         }
         setFormData((prevData) => ({
@@ -67,20 +67,28 @@ const Home = () => {
             }));
         }
     };
-    const { Destination, dateOfTravel, duration, preferences, budget } = formData;
+    const { destination, dateOfTravel, duration, preferences, budget } = formData;
 
     const { mutate, isPending, isSuccess, isError } = useMutation({
-        mutationFn: () => fetchItinerary({ Destination, dateOfTravel, duration, preferences, budget }),
+        mutationFn: () => fetchItinerary({ destination, dateOfTravel, duration, preferences, budget }),
         onSuccess: (data) => {
             navigate('/trip-details', { state: { tripDetails: data } })
         }
     })
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // const { destination, dateOfTravel, preferences, budget } = formData;
+
+        // Check if all fields are filled
+        if (!destination || !dateOfTravel.startDate || !dateOfTravel.endDate || !preferences || !budget) {
+            toast.error('Please fill in all the fields before generating the itinerary');
+            return; // Stop form submission
+        }
+
         mutate()
     };
 
-    const debouncedSearchTerm = useDebounceHook(Destination, 2000) // custom hook for debouncing
+    const debouncedSearchTerm = useDebounceHook(destination, 2000) // custom hook for debouncing
 
     const { data: placesData, isSuccess: isPlacesDataSuccess } = useQuery({
         queryKey: ['fetchPlaces'],
@@ -120,11 +128,11 @@ const Home = () => {
 
                         {/* Form Section */}
                         <div className="max-w-full mx-auto bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
-                            <form onSubmit={(e) => handleSubmit(e)}>
+                            <form onSubmit={handleSubmit}>
                                 <div className="grid sm:grid-cols-1 lg:grid-cols-4 gap-6 place-items-center">
                                     <div className="mb-4 w-full relative">
                                         <div>
-                                            <InputBox value={formData.Destination} handleChange={handleChange} name={'Destination'} placeholder={'Enter a city or country'} />
+                                            <InputBox value={formData.destination} handleChange={handleChange} label={'Destination'} name={'destination'} placeholder={'Enter a city or country'} />
                                             {showSuggestions && places && places.length > 0 && (
                                                 <ul className="autocomplete-list absolute z-10 mt-2 bg-white border dark:bg-gray-800 dark:border-none border-gray-300 rounded shadow-lg">
                                                     {places.map((place, index) => (
@@ -148,10 +156,10 @@ const Home = () => {
 
                                     {/* Dates of Travel */}
                                     <div className="mb-4 w-full">
-                                        <label htmlFor="date" className="block text-sm font-medium text-gray-700">
+                                        <label htmlFor="date" className="block text-sm lg:text-lg font-medium text-gray-700">
                                             Dates of Travel
                                         </label>
-                                        <Datepicker name={'dateOfTravel'} minDate={MIN_DATE} placeholder='Select dates' value={dateRange}
+                                        <Datepicker label="Select Date" name={'dateOfTravel'} minDate={MIN_DATE} placeholder='Select dates' value={dateRange}
                                             onChange={newValue => setDateRange(newValue)} popoverDirection='down' inputClassName={'mt-1 w-full h-14 pl-4 pr-10 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out text-sm placeholder-gray-400'} />
                                     </div>
 
@@ -169,7 +177,6 @@ const Home = () => {
                                     <div className="col-span-1 sm:col-span-1 lg:col-span-4">
                                         <button
                                             type="submit"
-
                                             className="flex items-center justify-center h-14 bg-blue-600 text-white text-xl py-2 px-4 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                                         >
                                             {isPending ? <div className='flex items-center space-x-2'> <img src={AuthLoader} className='w-10' /> <p className='text-sm md:text-xl'>Generating Itinerary</p></div> : <p className='text-sm md:text-xl'>Generate Itinerary</p>}

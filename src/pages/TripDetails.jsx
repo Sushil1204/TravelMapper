@@ -10,11 +10,15 @@ import { useMutation } from '@tanstack/react-query';
 import { databases, ID } from '../utilities/appwriteConfig';
 import Cookies from 'js-cookie';
 import TripDetailsUpdateModal from '../components/tripDetailsUpdateModal';
+import useAuth from '../hooks/useAuth';
+import toast from 'react-hot-toast';
 const TripDetails = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { state } = location;
+    const [savedTripID, setSavedTripID] = useState()
     const [showDetails, setShowDetails] = useState({ 0: true });
+    const { isAuthenticated } = useAuth();
     const [modalData, setModalData] = useState({
         isOpen: false,   // To track modal visibility
         message: ""      // To hold the message text
@@ -23,7 +27,7 @@ const TripDetails = () => {
         setShowDetails(!showDetails);
     };
 
-    const { mutate: saveTripDetails, isSuccess: isSaveTripDetailsSuccess, isError: isSaveTripDetailsError } = useMutation({
+    const { mutate: saveTripDetails, isSuccess: isSaveTripDetailsSuccess, isError: isSaveTripDetailsError, data: savedTripData } = useMutation({
         mutationKey: ['saveTrip'],
         mutationFn: async () => await databases.createDocument(
             import.meta.env.VITE_DATABASE_ID,
@@ -40,22 +44,39 @@ const TripDetails = () => {
                 message: "Saving..."
             })
         },
-        onSuccess: () => {
+        onSuccess: (data) => {
             setModalData({
                 isOpen: false,
                 message: "saved..."
             })
+            setSavedTripID(data?.$id)
         }
     })
 
     const handleSaveTrip = () => {
-        saveTripDetails()
-    }
+        if (!isAuthenticated) {
+            toast.error("Please login to save trip detail", {
+                style: {
+                    borderRadius: '10px',
+                    background: '#333',
+                    color: '#fff',
+                },
+            })
 
+            setTimeout(() => {
+                navigate('/login', { state: { tripDetailsAvailable: true, tripDetails: tripData } })
+
+                clearTimeout()
+            }, 5000);
+
+        } else {
+            saveTripDetails()
+        }
+    }
+    console.log(state)
     const tripData = state?.tripId == undefined ? state?.tripDetails : state?.tripDetails?.tripDetails
     const savedTrip = state?.tripId
 
-    console.log(tripData)
     const handleShowDayPlan = (index) => {
         setShowDetails((prevState) => {
             // close any previously opened item and open the new one
@@ -76,7 +97,7 @@ const TripDetails = () => {
         mutationFn: async () => databases.deleteDocument(
             import.meta.env.VITE_DATABASE_ID,
             import.meta.env.VITE_COLLECTION_ID,
-            savedTrip
+            savedTrip || savedTripID
         ),
         onMutate: () => {
             setModalData({
@@ -89,7 +110,7 @@ const TripDetails = () => {
                 isOpen: false,
                 message: ""
             })
-            navigate('/profile')
+            navigate('/profile', { state: { refetchDoucuments: true } })
 
         }
     })
@@ -97,6 +118,7 @@ const TripDetails = () => {
     const handleDeleteTrip = () => (
         deleteTripDetails()
     )
+
     return (
         <>
             <div className="container mx-auto px-4 py-3 mt-10 relative">

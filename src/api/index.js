@@ -16,7 +16,7 @@ const unsplashApi = axios.create({
 
 // Fetch Itinerary from OpenAI
 export const fetchItinerary = async (params) => {
-  const { Destination, preferences, duration, budget, dateOfTravel } = params;
+  const { destination, preferences, duration, budget, dateOfTravel } = params;
   const dateRange = Object.values(dateOfTravel);
   const response = await ai21Api.post("/chat/completions", {
     model: "jamba-1.5-large",
@@ -25,7 +25,7 @@ export const fetchItinerary = async (params) => {
         role: "user",
         content: `You are an AI travel planner. Please generate a detailed travel itinerary based on the following user inputs:
 
-1. **City/Country Name(s)**: ${Destination}
+1. **City/Country Name(s)**: ${destination}
 2. **Duration of Stay**: ${duration}
 3. **Date of Travel**: from ${dateRange[0]} to ${
           dateRange[1]
@@ -39,7 +39,7 @@ Your response should include the following sections:
    - Name: combination of ${destination
      .split(/[,|-]/)[0]
      .trim()}, ${duration}, ${preferences} and ${budget}. 
-   - Description: A brief description of the ${Destination}.
+   - Description: A brief description of the ${destination}.
 
 2. **Itinerary**:
    - **Day 1**:
@@ -49,9 +49,9 @@ Your response should include the following sections:
    - (Continue for the ${duration} of the stay)
 
 3. **Travel_Tips**:
-   - Tips: Practical travel tips specific to the ${Destination}, including transportation and local customs, use friendly and casual tone.
+   - Tips: Practical travel tips specific to the ${destination}, including transportation and local customs, use friendly and casual tone.
 4. **Commute_Options**:
-   - Tips: Availabe commute options inside ${Destination}, use friendly and casual tone.
+   - Tips: Availabe commute options inside ${destination}, use friendly and casual tone.
 
 Please ensure that each section is clearly labeled and formatted as a JSON object with keys for each piece of information. Use a descriptive and engaging tone to provide a comprehensive travel plan.
 `,
