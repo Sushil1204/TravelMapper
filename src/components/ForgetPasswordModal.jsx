@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { IoClose } from 'react-icons/io5';
 import { account } from '../utilities/appwriteConfig';
 import { Controller, useForm } from 'react-hook-form';
-import AuthLoader from '../assets/AuthLoader.gif';
+import AuthLoader from '../assets/authLoader.gif';
 
 const ForgetPasswordModal = ({ isOpen, onClose }) => {
     if (!isOpen) return null;

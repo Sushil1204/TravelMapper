@@ -5,7 +5,7 @@ import { account } from '../utilities/appwriteConfig';
 import Cookies from 'js-cookie';
 import { BiHide, BiShow } from 'react-icons/bi';
 import { Controller, useForm } from 'react-hook-form';
-import AuthLoader from '../assets/AuthLoader.gif'
+import AuthLoader from '../assets/authLoader.gif'
 
 const ForgetPassword = () => {
     const { search } = useLocation()
