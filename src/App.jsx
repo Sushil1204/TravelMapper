@@ -11,6 +11,7 @@ import Cookies from "js-cookie"
 import { useMutation } from "@tanstack/react-query"
 import { Toaster } from "react-hot-toast"
 import ForgetPassword from "./pages/ForgetPassword"
+import NotFound from "./pages/NotFound"
 
 function App() {
   const location = useLocation()
@@ -52,6 +53,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/account-verification" element={<VerifyAccount />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
+          <Route path="/*" element={<NotFound />} />
         </Routes>
         {location.pathname != '/login' && location.pathname != '/account-verification' && < AccountVerificationModal
           isOpen={isModalOpen}
