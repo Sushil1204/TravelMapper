@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { MdError } from "react-icons/md";
 import AuthErrors from '../components/AuthErrors';
-import AuthLoader from '../assets/AuthLoader.gif'
+import AuthLoader from '../assets/authLoader.gif'
 import TripDetailsUpdateModal from '../components/tripDetailsUpdateModal';
 import ForgetPasswordModal from '../components/ForgetPasswordModal';
 const ErrorMessage = ({ message }) => {
