@@ -160,7 +160,7 @@ const Home = () => {
                                             Dates of Travel
                                         </label>
                                         <Datepicker label="Select Date" name={'dateOfTravel'} minDate={MIN_DATE} placeholder='Select dates' value={dateRange}
-                                            onChange={newValue => setDateRange(newValue)} popoverDirection='down' inputClassName={'mt-1 w-full h-14 pl-4 pr-10 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out text-sm placeholder-gray-400'} />
+                                            onChange={newValue => setDateRange(newValue)} popoverDirection='down' inputClassName={'mt-1 w-full h-14 pl-4 pr-10 border border-gray-300 rounded-lg shadow-sm focus:outline-none transition duration-200 ease-in-out text-lg placeholder-gray-700'} />
                                     </div>
 
                                     {/* Travel Preferences */}
@@ -177,10 +177,25 @@ const Home = () => {
                                     <div className="col-span-1 sm:col-span-1 lg:col-span-4">
                                         <button
                                             type="submit"
-                                            className="flex items-center justify-center h-14 bg-blue-600 text-white text-xl py-2 px-4 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                            className="w-full flex items-center justify-center h-14 bg-gray-800 text-white  border border-gray-600 text-xl py-2 px-4 rounded-md shadow-sm transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+                                            disabled={isPending}
+                                            aria-live="polite"
                                         >
-                                            {isPending ? <div className='flex items-center space-x-2'> <img src={AuthLoader} className='w-10' /> <p className='text-sm md:text-xl'>Generating Itinerary</p></div> : <p className='text-sm md:text-xl'>Generate Itinerary</p>}
+                                            {isPending ? (
+                                                <div className="flex items-center space-x-2 animate-fadeIn">
+                                                    {/* Loading spinner */}
+                                                    <img
+                                                        src={AuthLoader}
+                                                        className="w-8 md:w-10 h-auto"
+                                                        alt="Loading"
+                                                    />
+                                                    <p className="text-sm md:text-lg">Generating Itinerary</p>
+                                                </div>
+                                            ) : (
+                                                <p className="text-sm md:text-lg">Generate Itinerary</p>
+                                            )}
                                         </button>
+
                                     </div>
                                 </div>
                             </form>

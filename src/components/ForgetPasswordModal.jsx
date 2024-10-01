@@ -17,9 +17,9 @@ const ForgetPasswordModal = ({ isOpen, onClose }) => {
         },
     });
 
-    const { mutate: createResetPasswordLink, isPending: isCreateResetPasswordLinkPending, isError, error } = useMutation({
+    const { mutate: createResetPasswordLink, isPending: isCreateResetPasswordLinkPending } = useMutation({
         mutationKey: ['createResetPassword'],
-        mutationFn: async ({ email }) => await account.createRecovery(email, 'http://localhost:5173/forget-password'),
+        mutationFn: async ({ email }) => await account.createRecovery(email, `${import.meta.env.VITE_BASE_URL}/forget-password `),
     });
 
     const onCreateResetPasswordLink = (data) => {

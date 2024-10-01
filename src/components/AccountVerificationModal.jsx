@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
 import { IoClose } from 'react-icons/io5';
 import { account } from '../utilities/appwriteConfig';
 
@@ -7,7 +6,7 @@ const AccountVerificationModal = ({ isOpen, onClose }) => {
     if (!isOpen) return null;
     const { data } = useQuery({
         queryKey: ['Create Verify'],
-        queryFn: () => account.createVerification('http://localhost:5173/account-verification'),
+        queryFn: () => account.createVerification(`${import.meta.env.VITE_BASE_URL}/account-verification`),
         refetchOnMount: false,
         refetchOnWindowFocus: false,
         refetchInterval: false

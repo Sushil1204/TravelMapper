@@ -138,22 +138,17 @@ const TripDetails = () => {
                             </div>
                         </div>
                         <div className="flex items-center justify-end space-x-10">
-                            <div className="relative group">
-                                <CgRedo size={30} cursor={'pointer'} />
-                                <div className="absolute bottom-full mb-2 w-max left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                                    Regenerate
-                                </div>
-                            </div>
+
                             {savedTrip || isSaveTripDetailsSuccess ?
                                 <div className="relative group" onClick={handleDeleteTrip}>
-                                    <MdDelete size={25} cursor={'pointer'} />
+                                    <MdDelete size={30} cursor={'pointer'} />
                                     <div className="absolute bottom-full mb-2 w-max left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
                                         Save
                                     </div>
                                 </div>
 
                                 : <div className="relative group" onClick={handleSaveTrip}>
-                                    <MdSaveAlt size={25} cursor={'pointer'} />
+                                    <MdSaveAlt size={30} cursor={'pointer'} />
                                     <div className="absolute bottom-full mb-2 w-max left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
                                         Save
                                     </div>
