@@ -60,6 +60,9 @@ function App() {
           onClose={() => setIsModalOpen(false)}
         />}
       </div>
+      <footer className="bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-400 py-4 text-center">
+        <p>© 2024 TravelMapper, By Sushil Pundkar</p>
+      </footer>
     </>
   )
 }
