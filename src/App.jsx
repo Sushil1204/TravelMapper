@@ -10,6 +10,7 @@ import AccountVerificationModal from "./components/AccountVerificationModal"
 import Cookies from "js-cookie"
 import { useMutation } from "@tanstack/react-query"
 import { Toaster } from "react-hot-toast"
+import ForgetPassword from "./pages/ForgetPassword"
 
 function App() {
   const location = useLocation()
@@ -50,6 +51,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/login" element={<Login />} />
           <Route path="/account-verification" element={<VerifyAccount />} />
+          <Route path="/forget-password" element={<ForgetPassword />} />
         </Routes>
         {location.pathname != '/login' && location.pathname != '/account-verification' && < AccountVerificationModal
           isOpen={isModalOpen}

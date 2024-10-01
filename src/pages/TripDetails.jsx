@@ -22,7 +22,8 @@ const TripDetails = () => {
     const [modalData, setModalData] = useState({
         isOpen: false,   // To track modal visibility
         message: ""      // To hold the message text
-    }); const user = Cookies.get('userData') && JSON.parse(Cookies.get('userData'))
+    });
+    const user = Cookies.get('userData') && JSON.parse(Cookies.get('userData'))
     const handleToggle = () => {
         setShowDetails(!showDetails);
     };
