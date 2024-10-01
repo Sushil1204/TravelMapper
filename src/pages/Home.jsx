@@ -102,6 +102,8 @@ const Home = () => {
 
     const places = placesData?.data?.results.filter((place) => place?.rank?.confidence > 0)
 
+
+
     return (
         <>
             <div className="relative">

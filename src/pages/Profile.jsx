@@ -19,14 +19,14 @@ const Profile = () => {
             'current'
         ),
         onSuccess: () => {
-            Cookies.remove('userData', { path: '/' })
+            Cookies.remove('userData')
+            navigate('/')
         }
 
     })
 
     const handleLogout = () => {
         Logout.mutate()
-        navigate('/')
     }
 
     const user = Cookies.get('userData') && JSON.parse(Cookies.get('userData'))
