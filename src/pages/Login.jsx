@@ -6,10 +6,8 @@ import { account, ID } from '../utilities/appwriteConfig';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { MdError } from "react-icons/md";
 import AuthErrors from '../components/AuthErrors';
 import AuthLoader from '../assets/authLoader.gif'
-import TripDetailsUpdateModal from '../components/tripDetailsUpdateModal';
 import ForgetPasswordModal from '../components/ForgetPasswordModal';
 const ErrorMessage = ({ message }) => {
     return <p className="text-red-500 text-sm mt-1">{message}</p>;
