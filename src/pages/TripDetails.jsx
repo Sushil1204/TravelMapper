@@ -9,7 +9,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { databases, ID } from '../utilities/appwriteConfig';
 import Cookies from 'js-cookie';
-import TripDetailsUpdateModal from '../components/tripDetailsUpdateModal';
+import TripDetailsUpdateModal from '../components/TripDetailsUpdateModal';
 import useAuth from '../hooks/useAuth';
 import toast from 'react-hot-toast';
 const TripDetails = () => {
